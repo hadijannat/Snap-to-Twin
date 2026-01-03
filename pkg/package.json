@@ -1,0 +1,24 @@
+{
+  "name": "snap_to_twin",
+  "type": "module",
+  "collaborators": [
+    "Snap-to-Twin Contributors"
+  ],
+  "description": "A WebAssembly-based Asset Administration Shell kernel that hydrates from photos using Vision AI",
+  "version": "0.1.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hadijannat/Snap-to-Twin"
+  },
+  "files": [
+    "snap_to_twin_bg.wasm",
+    "snap_to_twin.js",
+    "snap_to_twin.d.ts"
+  ],
+  "main": "snap_to_twin.js",
+  "types": "snap_to_twin.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}

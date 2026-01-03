@@ -1,0 +1,24 @@
+[package]
+name = "snap_to_twin"
+version = "0.1.0"
+edition = "2021"
+authors = ["Snap-to-Twin Contributors"]
+description = "A WebAssembly-based Asset Administration Shell kernel that hydrates from photos using Vision AI"
+license = "MIT"
+repository = "https://github.com/hadijannat/Snap-to-Twin"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wasm-bindgen = "0.2"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = false
+
+[profile.release]
+opt-level = "z"     # Optimize for size
+lto = true          # Link-time optimization
+codegen-units = 1   # Better optimization

@@ -1,0 +1,61 @@
+{
+  "id": "MOTOR-DEMO-12345",
+  "asset_type": "Siemens 1LE1001-1AB43-4AA4",
+  "nameplate": [
+    {
+      "id_short": "Manufacturer",
+      "value": "Siemens",
+      "unit": null
+    },
+    {
+      "id_short": "ModelNumber",
+      "value": "1LE1001-1AB43-4AA4",
+      "unit": null
+    },
+    {
+      "id_short": "SerialNumber",
+      "value": "XYZ-2024-001234",
+      "unit": null
+    },
+    {
+      "id_short": "Voltage",
+      "value": "400",
+      "unit": "V"
+    },
+    {
+      "id_short": "Current",
+      "value": "15.2",
+      "unit": "A"
+    },
+    {
+      "id_short": "Power",
+      "value": "7.5",
+      "unit": "kW"
+    },
+    {
+      "id_short": "Frequency",
+      "value": "50",
+      "unit": "Hz"
+    },
+    {
+      "id_short": "RPM",
+      "value": "1440",
+      "unit": "1/min"
+    },
+    {
+      "id_short": "PowerFactor",
+      "value": "0.85",
+      "unit": null
+    },
+    {
+      "id_short": "IPRating",
+      "value": "IP55",
+      "unit": null
+    },
+    {
+      "id_short": "YearOfManufacture",
+      "value": "2024",
+      "unit": null
+    }
+  ]
+}

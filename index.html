@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snap-to-Twin - WebAssembly AAS Kernel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: #00ff88;
+            font-family: 'Courier New', monospace;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 10px #00ff88;
+        }
+
+        .tagline {
+            color: #888;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .box {
+            border: 2px solid #00ff88;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            background: rgba(0, 255, 136, 0.05);
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+        }
+
+        .box h3 {
+            color: #00ff88;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            border-bottom: 1px solid #00ff8844;
+            padding-bottom: 0.5rem;
+        }
+
+        button {
+            background: #00ff88;
+            color: #0a0a0a;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px 5px 5px 0;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        button:hover {
+            background: #00cc6a;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background: #444;
+            color: #888;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        #status {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 4px solid #00ff88;
+            font-size: 1rem;
+        }
+
+        #output {
+            margin-top: 1rem;
+            padding: 1.5rem;
+            background: #000;
+            border: 1px solid #00ff88;
+            min-height: 80px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .status-ok {
+            color: #00ff88;
+        }
+
+        .status-error {
+            color: #ff4444;
+        }
+
+        .status-warning {
+            color: #ffaa00;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .info-panel {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 4px;
+            border-left: 3px solid #00ff88;
+        }
+
+        .info-panel h4 {
+            color: #00ff88;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-panel p {
+            color: #aaa;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .blink {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50%, 100% { opacity: 1; }
+            25%, 75% { opacity: 0.5; }
+        }
+
+        footer {
+            margin-top: 3rem;
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: #00ff88;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ Snap-to-Twin</h1>
+        <p class="tagline">WebAssembly-based Asset Administration Shell Kernel</p>
+
+        <div class="box">
+            <h3>📦 1. Boot Kernel</h3>
+            <button id="bootBtn">Load 'twin_config.json'</button>
+            <button id="exampleBtn">Load Example Twin</button>
+            <p id="status">System Status: <span class="blink">Waiting for configuration...</span></p>
+        </div>
+
+        <div class="grid">
+            <div class="box">
+                <h3>🔍 2. Query Properties</h3>
+                <button id="summaryBtn" disabled>Get Summary</button>
+                <button id="listBtn" disabled>List All Properties</button>
+                <button id="voltageBtn" disabled>Get Voltage</button>
+                <button id="powerBtn" disabled>Get Power</button>
+                <button id="exportBtn" disabled>Export AAS JSON</button>
+            </div>
+
+            <div class="box">
+                <h3>📊 3. Live Simulation</h3>
+                <button id="simBtn" disabled>Tick Simulation</button>
+                <button id="autoSimBtn" disabled>Auto-Run (Start)</button>
+                <button id="stopSimBtn" disabled>Stop Auto-Run</button>
+                <button id="resetBtn" disabled>Reset Simulation</button>
+            </div>
+        </div>
+
+        <div class="box">
+            <h3>💻 Output Console</h3>
+            <div id="output">> Snap-to-Twin Kernel v0.1.0
+> Waiting for commands...</div>
+        </div>
+
+        <div class="grid">
+            <div class="info-panel">
+                <h4>About This Project</h4>
+                <p>
+                    This is a WebAssembly-based digital twin that implements the
+                    Asset Administration Shell (AAS) standard. The kernel is written
+                    in Rust and runs entirely in your browser—no server required.
+                </p>
+            </div>
+            <div class="info-panel">
+                <h4>How It Works</h4>
+                <p>
+                    1. Take a photo of a machine nameplate<br>
+                    2. Run: <code>python generate.py photo.jpg</code><br>
+                    3. The AI extracts specs into AAS JSON<br>
+                    4. Load it here to create an active digital twin
+                </p>
+            </div>
+        </div>
+
+        <footer>
+            <p>Powered by Rust + WebAssembly | Industry 4.0 Compliant</p>
+            <p><a href="https://github.com/hadijannat/Snap-to-Twin" target="_blank">View on GitHub</a></p>
+        </footer>
+    </div>
+
+    <script type="module">
+        import init, { DigitalTwin, get_version } from './pkg/snap_to_twin.js';
+
+        let twin = null;
+        let autoSimInterval = null;
+
+        // UI Elements
+        const bootBtn = document.getElementById('bootBtn');
+        const exampleBtn = document.getElementById('exampleBtn');
+        const summaryBtn = document.getElementById('summaryBtn');
+        const listBtn = document.getElementById('listBtn');
+        const voltageBtn = document.getElementById('voltageBtn');
+        const powerBtn = document.getElementById('powerBtn');
+        const exportBtn = document.getElementById('exportBtn');
+        const simBtn = document.getElementById('simBtn');
+        const autoSimBtn = document.getElementById('autoSimBtn');
+        const stopSimBtn = document.getElementById('stopSimBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const status = document.getElementById('status');
+        const output = document.getElementById('output');
+
+        const allButtons = [summaryBtn, listBtn, voltageBtn, powerBtn, exportBtn,
+                           simBtn, autoSimBtn, stopSimBtn, resetBtn];
+
+        function log(message, type = 'normal') {
+            const timestamp = new Date().toLocaleTimeString();
+            output.innerHTML = `<span class="status-${type}">[${timestamp}] ${message}</span>`;
+        }
+
+        function enableButtons() {
+            allButtons.forEach(btn => btn.disabled = false);
+            stopSimBtn.disabled = true; // Initially disabled
+        }
+
+        async function run() {
+            try {
+                await init();
+                const version = get_version();
+                console.log(`Snap-to-Twin Wasm Kernel v${version} initialized`);
+            } catch (e) {
+                log('Failed to initialize WebAssembly module: ' + e, 'error');
+            }
+        }
+
+        // Load twin_config.json
+        bootBtn.onclick = async () => {
+            try {
+                const res = await fetch('./twin_config.json');
+                if (!res.ok) throw new Error('twin_config.json not found');
+
+                const json = await res.text();
+                twin = new DigitalTwin(json);
+
+                status.innerHTML = '<span class="status-ok">✅ Kernel Active. AAS Loaded from twin_config.json</span>';
+                log('Twin configuration loaded successfully!', 'ok');
+                enableButtons();
+            } catch (e) {
+                status.innerHTML = '<span class="status-error">❌ Error: ' + e.message + '</span>';
+                log('Error: ' + e.message + '\n\nMake sure twin_config.json exists. Run: python generate.py <image>', 'error');
+            }
+        };
+
+        // Load example configuration
+        exampleBtn.onclick = () => {
+            const exampleConfig = {
+                "id": "MOTOR-DEMO-001",
+                "asset_type": "Siemens 1LE1001",
+                "nameplate": [
+                    {"id_short": "Manufacturer", "value": "Siemens", "unit": null},
+                    {"id_short": "ModelNumber", "value": "1LE1001-1AB43-4AA4", "unit": null},
+                    {"id_short": "Voltage", "value": "400", "unit": "V"},
+                    {"id_short": "Current", "value": "15.2", "unit": "A"},
+                    {"id_short": "Power", "value": "7.5", "unit": "kW"},
+                    {"id_short": "Frequency", "value": "50", "unit": "Hz"},
+                    {"id_short": "RPM", "value": "1440", "unit": "1/min"},
+                    {"id_short": "PowerFactor", "value": "0.85", "unit": null},
+                    {"id_short": "IPRating", "value": "IP55", "unit": null}
+                ]
+            };
+
+            try {
+                twin = new DigitalTwin(JSON.stringify(exampleConfig));
+                status.innerHTML = '<span class="status-ok">✅ Kernel Active. Example AAS Loaded</span>';
+                log('Example twin loaded: Siemens 1LE1001 Motor (Demo)', 'ok');
+                enableButtons();
+            } catch (e) {
+                status.innerHTML = '<span class="status-error">❌ Error: ' + e + '</span>';
+                log('Error loading example: ' + e, 'error');
+            }
+        };
+
+        // Query buttons
+        summaryBtn.onclick = () => {
+            if (!twin) return;
+            log(twin.get_summary(), 'ok');
+        };
+
+        listBtn.onclick = () => {
+            if (!twin) return;
+            log('Available Properties:\n' + twin.list_properties(), 'ok');
+        };
+
+        voltageBtn.onclick = () => {
+            if (!twin) return;
+            log('Voltage: ' + twin.get_property('Voltage'), 'ok');
+        };
+
+        powerBtn.onclick = () => {
+            if (!twin) return;
+            log('Power: ' + twin.get_property('Power'), 'ok');
+        };
+
+        exportBtn.onclick = () => {
+            if (!twin) return;
+            const json = twin.get_aas_json();
+            log('AAS JSON Export:\n\n' + json, 'ok');
+
+            // Also download as file
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'exported_aas.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        };
+
+        // Simulation buttons
+        simBtn.onclick = () => {
+            if (!twin) return;
+            log(twin.tick_simulation(), 'ok');
+        };
+
+        autoSimBtn.onclick = () => {
+            if (!twin) return;
+            autoSimInterval = setInterval(() => {
+                log(twin.tick_simulation(), 'ok');
+            }, 500);
+
+            autoSimBtn.disabled = true;
+            stopSimBtn.disabled = false;
+            log('Auto-simulation started (500ms interval)', 'warning');
+        };
+
+        stopSimBtn.onclick = () => {
+            if (autoSimInterval) {
+                clearInterval(autoSimInterval);
+                autoSimInterval = null;
+            }
+            autoSimBtn.disabled = false;
+            stopSimBtn.disabled = true;
+            log('Auto-simulation stopped', 'warning');
+        };
+
+        resetBtn.onclick = () => {
+            if (!twin) return;
+            if (autoSimInterval) {
+                clearInterval(autoSimInterval);
+                autoSimInterval = null;
+                autoSimBtn.disabled = false;
+                stopSimBtn.disabled = true;
+            }
+            twin.reset_simulation();
+            log('Simulation state reset', 'warning');
+        };
+
+        // Initialize
+        run();
+    </script>
+</body>
+</html>

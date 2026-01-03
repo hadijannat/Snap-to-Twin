@@ -1,0 +1,43 @@
+# Rust
+/target/
+# Cargo.lock is tracked for binary projects
+# Cargo.lock
+
+# WebAssembly build output
+# We include /pkg/ for demo purposes so users can try immediately
+# /pkg/
+# *.wasm
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# Generated configurations
+twin_config.json
+exported_aas.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Test images (user-provided)
+*.jpg
+*.jpeg
+*.png
+*.gif
+!examples/*.jpg
+!examples/*.png
