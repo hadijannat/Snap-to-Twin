@@ -5,6 +5,7 @@
 [![Rust](https://img.shields.io/badge/rust-1.70%2B-orange.svg)](https://www.rust-lang.org/)
 [![WebAssembly](https://img.shields.io/badge/WebAssembly-enabled-blue.svg)](https://webassembly.org/)
 [![Industry 4.0](https://img.shields.io/badge/Industry%204.0-AAS%20Compliant-green.svg)](https://www.plattform-i40.de/)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18763377.svg)](https://doi.org/10.5281/zenodo.18763377)
 
 A revolutionary **Blue Ocean** micro-project combining **Generative AI**, **Systems Programming (Rust)**, and **Industry 4.0** standards to solve the two biggest bottlenecks in digital twin adoption:
 
