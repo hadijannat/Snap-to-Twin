@@ -1,27 +1,27 @@
 # Snap-to-Twin
 
-**From Photo to Executable Digital Twin in 10 Seconds—Running Serverless in the Browser.**
+**Turn a machine photo into a digital twin that runs in the browser.**
 
 [![Rust](https://img.shields.io/badge/rust-1.70%2B-orange.svg)](https://www.rust-lang.org/)
 [![WebAssembly](https://img.shields.io/badge/WebAssembly-enabled-blue.svg)](https://webassembly.org/)
 [![Industry 4.0](https://img.shields.io/badge/Industry%204.0-AAS%20Compliant-green.svg)](https://www.plattform-i40.de/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18763377.svg)](https://doi.org/10.5281/zenodo.18763377)
 
-A revolutionary **Blue Ocean** micro-project combining **Generative AI**, **Systems Programming (Rust)**, and **Industry 4.0** standards to solve the two biggest bottlenecks in digital twin adoption:
+A small project that combines **Generative AI**, **Rust**, and **Industry 4.0** standards to address two common challenges in digital twin adoption:
 
 1. **Data Entry** (digitizing legacy machines)
 2. **Deployment Complexity** (eliminating server dependencies)
 
-## The Research Question
+## Project Goal
 
-*"Can we combine Multimodal AI (Vision) with WebAssembly to instantly reconstruct an active Asset Administration Shell (AAS) from a physical photo and execute it as a serverless micro-kernel on the client side?"*
+Convert machine nameplate photos into an Asset Administration Shell (AAS) configuration and run it locally as a WebAssembly digital twin.
 
-## The Innovation
+## Key Features
 
-- **📸 AI-Powered Data Extraction**: Use GPT-4o Vision to read machine nameplates and extract technical specifications
-- **⚙️ Rust + WebAssembly Kernel**: A lightweight, executable digital twin that runs in any browser
-- **🏭 Industry 4.0 Compliant**: Implements the Asset Administration Shell (AAS) standard
-- **🚀 Zero Infrastructure**: No servers, no Docker, no cloud—runs entirely client-side
+- GPT-4o Vision reads machine nameplates and extracts specifications
+- A Rust/WebAssembly kernel runs directly in the browser
+- Output follows the Asset Administration Shell (AAS) format
+- The app runs client-side without backend services
 
 ## Project Architecture
 
@@ -45,13 +45,13 @@ A revolutionary **Blue Ocean** micro-project combining **Generative AI**, **Syst
          │
          ▼
 ┌─────────────────┐
-│  Rust Wasm      │  ← Active Digital Twin Kernel
+│  Rust Wasm      │  ← Digital Twin Runtime
 │  Kernel Runtime │
 └────────┬────────┘
          │
          ▼
 ┌─────────────────┐
-│  Browser UI     │  ← Zero-Install Interface
+│  Browser UI     │  ← Browser Interface
 │  (index.html)   │
 └─────────────────┘
 ```
@@ -119,25 +119,25 @@ This will:
 
 1. Open `http://localhost:8080` in your browser
 2. Click **"Load twin_config.json"**
-3. Your digital twin is now active!
+3. The digital twin is loaded.
 
 #### 3. Interact with the Twin
 
 The kernel provides:
-- **Property Queries**: Get voltage, power, RPM, etc.
+- **Property Queries**: Get voltage, power, RPM, and other values
 - **AAS Export**: Download standard Industry 4.0 JSON
-- **Live Simulation**: Run dynamic behavior models
-- **Zero Latency**: Everything runs in WebAssembly
+- **Live Simulation**: Run behavior models
+- **Local Execution**: Everything runs in WebAssembly in the browser
 
-## Technical Highlights
+## Technical Overview
 
 ### Rust/Wasm Kernel (`src/lib.rs`)
 
-The kernel implements:
-- **AAS V3.0 Data Model**: Industry-standard digital twin structure
-- **Active Object Pattern**: Not just data, but executable behavior
-- **Memory Safety**: Rust guarantees prevent runtime errors
-- **JavaScript Interop**: Seamless browser integration via wasm-bindgen
+The kernel includes:
+- **AAS V3.0 Data Model**: Structured digital twin data
+- **Executable Methods**: Query and simulation functions
+- **Memory Safety**: Rust protections against common runtime errors
+- **JavaScript Interop**: Browser bindings through wasm-bindgen
 
 ```rust
 #[wasm_bindgen]
@@ -158,10 +158,10 @@ impl DigitalTwin {
 ### AI Generator (`generate.py`)
 
 The generator:
-- Uses **GPT-4o with Vision** for multimodal understanding
-- Enforces **strict JSON schema** compliance
-- Handles **multiple image formats**
-- Validates **AAS semantic correctness**
+- Uses **GPT-4o with Vision** to read the input image
+- Produces JSON that matches the required schema
+- Supports multiple image formats
+- Validates generated AAS fields
 
 ### Benefits Over Traditional Approaches
 
@@ -169,7 +169,7 @@ The generator:
 |----------------|--------------|
 | Manual data entry (hours) | AI extraction (seconds) |
 | Requires Java/Python runtime | Runs in browser |
-| Server infrastructure needed | Serverless |
+| Server infrastructure needed | No backend required |
 | ~100MB+ deployment | ~500KB Wasm file |
 | Complex installation | Single HTML file |
 
@@ -244,15 +244,14 @@ impl DigitalTwin {
 }
 ```
 
-## Why This Shows Expertise
+## Design Focus
 
-This project demonstrates:
+This project focuses on:
 
-1. **Cutting-Edge Stack**: Rust + Wasm + AI places you at the forefront of modern engineering
-2. **Industry Knowledge**: AAS compliance shows understanding of industrial standards
-3. **Architectural Innovation**: Moving from passive data to active objects
-4. **Problem-Solving**: Addresses real bottlenecks in Industry 4.0 adoption
-5. **Full-Stack Skills**: From AI prompting to systems programming to web deployment
+1. Converting machine photos into structured AAS data
+2. Running digital twin logic in a browser with WebAssembly
+3. Keeping setup lightweight with no backend requirement
+4. Making Industry 4.0 concepts easier to test and demonstrate
 
 ## Performance Metrics
 
@@ -305,4 +304,4 @@ If you use this project in research, please cite:
 
 ---
 
-**Built with ⚡ by innovators who believe the future is serverless, standards-compliant, and AI-powered.**
+**Built by Snap-to-Twin contributors.**
